@@ -23,6 +23,12 @@ fn run() -> Result<(), Box<dyn Error>> {
         .file("liblz4/lib/xxhash.c")
         // We always compile the C with optimization, because otherwise it is 20x slower.
         .opt_level(3);
+
+    if let Ok(_) = env::var("CRT_STATIC") {
+        compiler
+            .static_crt(true);
+    }
+
     match env::var("TARGET")
         .map_err(|err| format!("reading TARGET environment variable: {}", err))?
         .as_str()
